@@ -143,7 +143,7 @@ public class PopupBubble extends RelativeLayout {
             mTextView.setPadding(00, 20, 35, 25);
         else
             mTextView.setPadding(35, 20, 35, 25);
-
+        mTextView.setTextColor(Color.parseColor(TEXT_COLOR));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
                 LayoutParams.WRAP_CONTENT);
         layoutParams.addRule(RelativeLayout.RIGHT_OF, mImageView.getId());
@@ -153,38 +153,39 @@ public class PopupBubble extends RelativeLayout {
     }
 
     private void setRoundedBackground() {
-        RoundRectShape roundRectShape = new RoundRectShape(
+        RoundRectShape rect = new RoundRectShape(
                 new float[]{50, 50, 50, 50, 50, 50, 50, 50},
                 null,
                 null);
-        ShapeDrawable shapeDrawable = new ShapeDrawable(roundRectShape);
-        shapeDrawable.getPaint().setColor(Color.parseColor("#DDDDDD"));
 
-        ShapeDrawable shapeDrawable1 = new ShapeDrawable(roundRectShape);
-        shapeDrawable.setShaderFactory(new ShapeDrawable.ShaderFactory() {
+
+        ShapeDrawable sd = new ShapeDrawable(rect);
+        sd.getPaint().setColor(Color.parseColor(BACKGROUND_COLOR));
+
+        ShapeDrawable sds = new ShapeDrawable(rect);
+        sds.setShaderFactory(new ShapeDrawable.ShaderFactory() {
+
             @Override
             public Shader resize(int width, int height) {
-                LinearGradient linearGradient = new LinearGradient(
-                        0, 0, 0, height,
 
-                        new int[]{Color.parseColor(BACKGROUND_COLOR),
-                                Color.parseColor(BACKGROUND_COLOR)},
-                        new float[]{0, 1},
-                        Shader.TileMode.REPEAT
-                );
-                return linearGradient;
+                LinearGradient lg = new LinearGradient(0, 0, 0, height,
+                        new int[]{Color.parseColor("#DDDDDD"),
+                                Color.parseColor("#DDDDDD"),
+                                Color.parseColor("#DDDDDD"),
+                                Color.parseColor("#DDDDDD")}, new float[]{0,
+                        0.50f, 0.50f, 1}, Shader.TileMode.REPEAT);
+
+                return lg;
             }
         });
-        LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{shapeDrawable1, shapeDrawable});
-        layerDrawable.setLayerInset(0, 2, 2, 0, 0);
+
+        LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{sds, sd});
+        layerDrawable.setLayerInset(0, 2, 2, 0, 0); // inset the shadow so it doesn't start right at the left/top
         layerDrawable.setLayerInset(1, 0, 0, 2, 2);
 
-        //this.setBackgroundDrawable(layerDrawable);
-        this.setBackground(layerDrawable);
+        this.setBackgroundDrawable(layerDrawable);
 
     }
-
-
 
 
     @Override
